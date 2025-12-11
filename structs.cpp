@@ -18,6 +18,6 @@ struct TelemetryMessage{
 
 struct DeviceData {
     Sample buffer[RING_SIZE];
-    int next_index = {0};
-    int count_up_ring = {0};
+    int head = {0};
+    int count = {0};
 };

@@ -26,21 +26,37 @@
 class Message final {
     public:
         Message () {};
-        void process_message(const uint8_t msg[15]){
+
+        void process_message(const uint8_t msg[15]) {
             const uint8_t CRC = msg[14];
-            
             if (CRC8_XOR(msg,14) != CRC) {
                 throw std::runtime_error("Invalid CRC!"); 
                 return;
             }
             
             uint8_t device_id = msg[0];
+            uint32_t BigEndian_Float32 = (uint32_t(msg[1]) << 24) |
+                                        (uint32_t(msg[2])<< 16) |
+                                        (uint32_t(msg[3])<<8) |
+                                        uint8_t(msg[4]);
+            uint32_t Host_Float32 = ntohl(BigEndian_Float32);
+            float F;
+            static_assert(sizeof(float) == 4, "Float must be 4 bytes");
+            std::memcpy(&F,&Host_Float32,4);
 
-            uint32_t BFloat32 = (uint32_t(msg[1])<<24) | (uint32_t(msg[2])<<16) | (uint32_t(msg[3])<<8) | uint32_t(msg[4]); 
-            uint32_t HostFloat32 = ntohl(BFloat32);
-
-
+            uint64_t BigEndian_TimeStamp = {0};
+            for (int i = 0; i < 8; ++i) {
+                BigEndian_TimeStamp = (BigEndian_TimeStamp << 8) | msg[5+i];
+            }
+            uint64_t Time_Stamp = host_u64(BigEndian_TimeStamp);
+            std::lock_guard<std::mutex> lock_ (_devices_mutex_);
+            DeviceData &D = devices[device_id];
+            D.buffer[D.head].value =(double)F;
+            D.buffer[D.head].timestamp = Time_Stamp;
+            D.head = (D.head + 1) % RING_SIZE;
+            if (D.count < RING_SIZE) ++D.count;
         }
+
         ~Message () {
             running = {false};
         }
