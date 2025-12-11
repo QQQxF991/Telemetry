@@ -1,5 +1,15 @@
 #include "bynary_message.сpp"
 
+std::string safe_json(const std::string &s) {
+    std::ostringstream o;
+    for (char c : s) {
+        if (c == '"') 0 << "\\\"";
+        else if (c == '\\') o << "\\\\";
+        else o << c;
+    }
+    return o.str();   
+}
+
 void BynaryServer() {
     int SRV = socket(AF_INET,SOCK_STREAM,0);
     if (SRV < 0) {perror("Socket"); return;}
