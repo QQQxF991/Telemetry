@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <atomic>
 
 static constexpr int RING_SIZE = 50;
 static constexpr int BINARY_PORT = 9001;
