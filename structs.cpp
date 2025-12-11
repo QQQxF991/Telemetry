@@ -20,4 +20,5 @@ struct DeviceData {
     Sample buffer[RING_SIZE];
     int head = {0};
     int count = {0};
+    Sample latest;
 };
