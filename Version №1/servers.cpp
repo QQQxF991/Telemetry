@@ -1,5 +1,16 @@
 #pragma once
 #include "bynary_message.сpp"
+#include <regex>
+#include <sstream>
+#include <iomanip>
+#include <vector>
+#include <thread>
+#include <iostream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <cstring>
 
 std::string safe_json(const std::string &s) {
     std::ostringstream o;
