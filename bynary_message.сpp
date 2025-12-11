@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <mutex>
 #include <thread>
-#include "structs.cpp"
 #include <arpa/inet.h>  
 #include <endian.h>     
 #include <atomic>

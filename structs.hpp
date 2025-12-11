@@ -1,4 +1,5 @@
 #include <cstdint>
+#include "bynary_message.сpp"
 
 static constexpr int RING_SIZE = {50};
 static constexpr int BINARY_PORT = {9001};
