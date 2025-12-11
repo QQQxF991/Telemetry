@@ -1,10 +1,9 @@
+#pragma once
 #include <atomic>
 #include <string>
 #include <unordered_map>
 #include <mutex>
-#include <thread>
-#include <arpa/inet.h>  
-#include <endian.h>     
+#include <thread>   
 #include <atomic>
 #include <cstring>
 #include <functional>
@@ -17,7 +16,8 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
-
+#include "structs.hpp"
+#include "servers.cpp"
 #if __has_include(<endian.h>)
     #include <endian.h>
     #define HAVE_ENDIAN_H 1
@@ -96,6 +96,7 @@ void process_message(const uint8_t msg[15]) {
         ~Message () {
             running = {false};
         }
+ 
     private:
         std::atomic<bool> running = {true};
         std::unordered_map<uint8_t,DeviceData> devices;
