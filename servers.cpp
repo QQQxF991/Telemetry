@@ -62,3 +62,52 @@ void BynaryServer() {
     }
     close(SRV);
 }
+
+void HTTP_server () {
+    int SRV = socket(AF_INET,SOCK_STREAM,0);
+    if (SRV < 0) {
+        perror("socket");
+        return;
+    }
+    int opt = {1};
+    setsockopt(SRV,SOL_SOCKET,SO_REUSEADDR, &opt, sizeof(opt));
+
+    socaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_port = htons(HTTP_PORT);
+    if (bind(SRV,(sockaddr*)&addr,sizeof(addr))<0){
+        perror("bind");
+        close(SRV);
+        return;
+    }
+    if(listen(SRV,10) < 0) {
+        perror("listen");
+        close(SRV);
+        return;
+    }
+    std::cout << "HTTP server port " << HTTP_PORT << "\n";
+    std::regex re_latest(R"(^/device/(\d{1,3})/latest$)");
+    std::regex re_stats(R"(^/device/(\d{1,3})/stats$)");
+    while (running) {
+        int cl = accept(SRV,nullptr,nullptr);
+        if (cl<0)
+        {
+            if (running)
+            {
+                perror("accept");
+                break;
+            }
+            std::thread([cl, &re_latest, &re_stats](){
+                char req[4096];
+                ssize_t R = read(cl, req, sizeof(req)-1);
+                
+
+
+
+            })
+        }
+        
+    }
+    
+}
